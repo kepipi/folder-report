@@ -15,4 +15,8 @@ public interface FolderReportAction {
 
     String SAVE_FOLDER = "/save-folder";
 
+    String UPLOAD_FILE = "/upload-file";
+
+    String DELETE_FILE = "/delete-file";
+
 }

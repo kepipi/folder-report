@@ -7,9 +7,8 @@ import com.sztus.lib.back.end.basic.service.FolderBusinessService;
 import com.sztus.lib.back.end.basic.type.Result;
 import com.sztus.lib.back.end.basic.type.constant.FolderReportAction;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -33,6 +32,24 @@ public class FolderController {
 
     @GetMapping(FolderReportAction.LIST_FILE)
     public Result<List<File>> listFile(@RequestParam Long folderId) {
-        return Result.ok(folderBusinessService.listFile(folderId));
+        return Result.ok(fileBusinessService.listFile(folderId));
+    }
+
+    @PostMapping(FolderReportAction.SAVE_FOLDER)
+    public Result<String> saveFolder(@RequestBody Folder folder) {
+        folderBusinessService.saveFolder(folder);
+        return Result.ok();
+    }
+
+    @PostMapping(FolderReportAction.UPLOAD_FILE)
+    public Result<String> uploadFile() {
+        //todo
+        return Result.ok();
+    }
+
+    @DeleteMapping(FolderReportAction.DELETE_FILE)
+    public Result<String> deleteFile(@RequestParam Long fileId) {
+        fileBusinessService.deleteFile(fileId);
+        return Result.ok();
     }
 }

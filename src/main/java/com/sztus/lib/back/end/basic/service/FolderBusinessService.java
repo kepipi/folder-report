@@ -20,14 +20,12 @@ public class FolderBusinessService {
     @Autowired
     private FolderService folderService;
 
-    @Autowired
-    private FileService fileService;
-
+    
     public List<Folder> listFolder(Long housePropertyId) {
         return folderService.list(new LambdaQueryWrapper<Folder>().eq(Folder::getHousePropertyId, housePropertyId));
     }
 
-    public List<File> listFile(Long folderId) {
-        return fileService.list(new LambdaQueryWrapper<File>().eq(File::getFolderId, folderId));
+    public void saveFolder(Folder folder) {
+        folderService.saveOrUpdate(folder);
     }
 }
