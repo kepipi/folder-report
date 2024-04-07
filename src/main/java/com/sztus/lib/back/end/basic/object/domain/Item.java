@@ -12,20 +12,24 @@ import java.io.Serializable;
  * @date: 2024/4/3 14:45
  */
 @Data
-@TableName("report")
-public class Report implements Serializable {
+@TableName("Item")
+public class Item implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    private Long housePropertyId;
+    private Long fileId;
 
-    private String downloadUrl;
+    private String itemName;
 
-    private Long createdAt;
+    private String quantity;
 
-    private Long updatedAt;
+    private String cleanliness;
+
+    private String condition;
+
+    private String comments;
 
 }
