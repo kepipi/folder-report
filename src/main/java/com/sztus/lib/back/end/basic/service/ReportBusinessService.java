@@ -10,6 +10,7 @@ import com.sztus.lib.back.end.basic.object.domain.File;
 import com.sztus.lib.back.end.basic.object.domain.Item;
 import com.sztus.lib.back.end.basic.object.domain.Location;
 import com.sztus.lib.back.end.basic.object.domain.Report;
+import com.sztus.lib.back.end.basic.object.dto.FileItemDTO;
 import com.sztus.lib.back.end.basic.utils.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,4 +59,13 @@ public class ReportBusinessService {
         locationService.saveBatch(saveLocationList);
 
     }
+
+    public List<FileItemDTO> previewReport(Long reportId) {
+        List<FileItemDTO> fileItemDTOS = reportService.listFileItem(reportId);
+        if (CollectionUtils.isEmpty(fileItemDTOS)) {
+            return Collections.emptyList();
+        }
+        return fileItemDTOS;
+    }
+
 }

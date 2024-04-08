@@ -1,6 +1,7 @@
 package com.sztus.lib.back.end.basic.controller;
 
 import com.sztus.lib.back.end.basic.object.domain.Report;
+import com.sztus.lib.back.end.basic.object.dto.FileItemDTO;
 import com.sztus.lib.back.end.basic.service.ReportBusinessService;
 import com.sztus.lib.back.end.basic.type.Result;
 import com.sztus.lib.back.end.basic.type.constant.LocationReportAction;
@@ -35,5 +36,9 @@ public class ReportController {
         return Result.ok();
     }
 
+    @GetMapping("/preview-report")
+    public Result<List<FileItemDTO>> previewReport(@RequestParam Long reportId) {
+        return Result.ok(reportBusinessService.previewReport(reportId));
+    }
 
 }
