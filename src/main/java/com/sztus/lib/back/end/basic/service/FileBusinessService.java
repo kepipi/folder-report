@@ -12,13 +12,11 @@ import com.sztus.lib.back.end.basic.object.request.BatchUploadFileUrlRequest;
 import com.sztus.lib.back.end.basic.type.constant.JsonKey;
 import com.sztus.lib.back.end.basic.type.enumerate.CleanlinessEnum;
 import com.sztus.lib.back.end.basic.type.enumerate.ConditionEnum;
-import org.checkerframework.checker.units.qual.A;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +25,7 @@ import java.util.List;
  * @date 2024/4/7 14:39
  */
 @Service
+@Slf4j
 public class FileBusinessService {
 
 
@@ -60,7 +59,14 @@ public class FileBusinessService {
             String responseBody = resetTemplateService.doPostByRequestBody(AI_URL, data.toJSONString());
             JSONObject responseJson = JSONObject.parseObject(responseBody);
             String description = responseJson.getString("Description");
-            JSONArray itemJsonList = JSON.parseArray(description);
+            JSONArray itemJsonList = null;
+            try {
+                itemJsonList = JSON.parseArray(description);
+            } catch (Exception e) {
+                log.warn("json格式异常 json：{}", request.getUrl() + responseBody);
+                description = "[" + description + "]";
+                itemJsonList = JSON.parseArray(description);
+            }
             if (!itemJsonList.isEmpty()) {
                 for (int i = 0; i < itemJsonList.size(); i++) {
                     JSONObject itemJson = itemJsonList.getJSONObject(i);
