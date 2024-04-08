@@ -27,7 +27,7 @@ public class LocationController {
     private FileBusinessService fileBusinessService;
 
     @GetMapping(LocationReportAction.LIST_LOCATION)
-    public Result<List<Location>> listFolder(@RequestParam Long reportId) {
+    public Result<List<Location>> listLocation(@RequestParam Long reportId) {
         return Result.ok(locationBusinessService.listLocation(reportId));
     }
 
@@ -36,7 +36,7 @@ public class LocationController {
         return Result.ok(fileBusinessService.listFile(locationId));
     }
 
-    @PostMapping(LocationReportAction.SAVE_FOLDER)
+    @PostMapping(LocationReportAction.SAVE_LOCATION)
     public Result<String> saveFolder(@RequestBody Location location) {
         locationBusinessService.saveLocation(location);
         return Result.ok();

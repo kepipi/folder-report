@@ -13,7 +13,7 @@ public interface LocationReportAction {
 
     String LIST_REPORT = "/list-report";
 
-    String SAVE_FOLDER = "/save-location";
+    String SAVE_LOCATION = "/save-location";
 
     String UPLOAD_FILE = "/upload-file";
 
