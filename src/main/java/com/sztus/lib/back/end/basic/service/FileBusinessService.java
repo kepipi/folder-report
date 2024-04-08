@@ -50,7 +50,9 @@ public class FileBusinessService {
 
     public List<Item> aiAnalyse(List<BatchUploadFileUrlRequest> requestList) {
         List<Item> itemList = new ArrayList<>();
+        List<Long> fileIdList = new ArrayList<>();
         for (BatchUploadFileUrlRequest request : requestList) {
+            fileIdList.add(request.getId());
             JSONObject data = new JSONObject();
             data.put(JsonKey.FILE_URL, request.getUrl());
             String responseBody = resetTemplateService.doPostByRequestBody(AI_URL, data.toJSONString());
@@ -64,13 +66,18 @@ public class FileBusinessService {
                     item.setFileId(request.getId());
                     item.setItemName(itemJson.getString("ItemName"));
                     item.setComments(itemJson.getString("Suggested"));
-                    item.setCleanliness(itemJson.getString("Cleanliness"));
                     item.setQuantity(itemJson.getString("Quantity"));
-                    item.setCondition(itemJson.getString("Description"));
+                    item.setDescription(itemJson.getString("Description"));
+                    item.setCondition(itemJson.getString("Condition"));
+                    item.setCleanliness(itemJson.getString("Cleanliness"));
                     itemList.add(item);
                 }
             }
         }
+        if (!CollectionUtils.isEmpty(fileIdList)) {
+            itemService.remove(new LambdaQueryWrapper<Item>().in(Item::getFileId, fileIdList));
+        }
+
         if (!CollectionUtils.isEmpty(itemList)) {
             itemService.saveBatch(itemList);
         }
