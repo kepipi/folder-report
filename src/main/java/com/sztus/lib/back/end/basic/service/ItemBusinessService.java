@@ -47,8 +47,8 @@ public class ItemBusinessService {
                         .itemId(item.getItemId())
                         .itemName(item.getItemName())
                         .quantity(item.getQuantity())
-                        .cleanliness(CleanlinessEnum.getTextByValue(item.getCleanliness()))
-                        .condition(ConditionEnum.getTextByValue(item.getCondition()))
+                        .cleanliness(item.getCleanliness())
+                        .condition(item.getCondition())
                         .comments(item.getComments())
                         .build()).collect(Collectors.toList()));
             });
