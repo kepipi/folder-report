@@ -74,29 +74,8 @@ public class StorageService {
 
             String objectUrl = s3ProviderByAws.getObjectUrl(s3Client, relativePath, fileName);
 
-//            if (Objects.equals(request.getMode(), StorageModeEnum.REPLACE.getValue())) {
-//                cloudFrontClientCreateInvalidation(objectUrl, bucketName);
-//            }
-
-//            objectUrl = s3ProviderByAws.convertDomainName(objectUrl, request.getDomainName());
-
-            Integer acl = request.getAcl();
 
             StorageFileUploadResponse storageFileUploadResponse = new StorageFileUploadResponse();
-
-//            if (!Objects.equals(acl, StorageAclEnum.PRIVATE.getValue())) {
-//                storageFileUploadResponse.setFileUrl(objectUrl);
-//                return storageFileUploadResponse;
-//            }
-//            if (Objects.equals(acl, StorageAclEnum.PRIVATE.getValue()) && Objects.equals(request.getMode(), StorageModeEnum.REPLACE.getValue())) {
-//                FileMapping existFileMapping = fileMappingService.getFileMappingByFileNameAndPath(fileName, relativePath);
-//                if (Objects.nonNull(existFileMapping)) {
-//                    String fileCode = existFileMapping.getFileCode();
-//                    storageFileUploadResponse.setFileUrl(downloadAddress + fileCode);
-//                    storageFileUploadResponse.setFileCode(fileCode);
-//                    return storageFileUploadResponse;
-//                }
-//            }
 
             String uuid = UUID.randomUUID().toString().replace("-", "");
 
