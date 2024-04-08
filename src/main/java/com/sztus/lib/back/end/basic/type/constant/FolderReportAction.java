@@ -19,4 +19,11 @@ public interface FolderReportAction {
 
     String DELETE_FILE = "/delete-file";
 
+
+    String STORAGE_UPLOAD_FILE = "/storage/upload-file";
+
+    String DOWNLOAD_FILE = "/storage/download-file/{fileCode}";
+
+
+
 }
