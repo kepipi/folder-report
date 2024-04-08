@@ -77,11 +77,6 @@
             <artifactId>mybatis-plus-join-boot-starter</artifactId>
             <version>1.4.4</version>
         </dependency>
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
-            <version>3.5.1</version>
-        </dependency>
 
         <!--    google 工具包，提供下划线转驼峰，线程池等工具    -->
         <dependency>
