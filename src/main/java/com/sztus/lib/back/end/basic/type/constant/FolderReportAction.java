@@ -19,6 +19,8 @@ public interface FolderReportAction {
 
     String DELETE_FILE = "/delete-file";
 
+    String AI_ANALYSE = "/ai-analyse";
+
 
     String STORAGE_UPLOAD_FILE = "/storage/upload-file";
 

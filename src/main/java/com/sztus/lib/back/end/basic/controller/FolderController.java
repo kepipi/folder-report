@@ -2,6 +2,7 @@ package com.sztus.lib.back.end.basic.controller;
 
 import com.sztus.lib.back.end.basic.object.domain.File;
 import com.sztus.lib.back.end.basic.object.domain.Folder;
+import com.sztus.lib.back.end.basic.object.request.BatchUploadFileUrlRequest;
 import com.sztus.lib.back.end.basic.service.FileBusinessService;
 import com.sztus.lib.back.end.basic.service.FolderBusinessService;
 import com.sztus.lib.back.end.basic.type.Result;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -50,6 +52,12 @@ public class FolderController {
     @DeleteMapping(FolderReportAction.DELETE_FILE)
     public Result<String> deleteFile(@RequestParam Long fileId) {
         fileBusinessService.deleteFile(fileId);
+        return Result.ok();
+    }
+
+    @PostMapping(FolderReportAction.AI_ANALYSE)
+    public Result<String> aiAnalyse(@RequestBody BatchUploadFileUrlRequest request) throws IOException {
+        fileBusinessService.aiAnalyse(request.fileUrlList);
         return Result.ok();
     }
 }
