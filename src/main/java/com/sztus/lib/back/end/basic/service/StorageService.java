@@ -4,11 +4,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-import com.sztus.lib.back.end.basic.dao.service.FileMappingService;
 import com.sztus.lib.back.end.basic.dao.service.StorageProviderParameterService;
 import com.sztus.lib.back.end.basic.dao.service.StorageProviderService;
 import com.sztus.lib.back.end.basic.exception.BusinessException;
-import com.sztus.lib.back.end.basic.object.domain.FileMapping;
 import com.sztus.lib.back.end.basic.object.domain.StorageProvider;
 import com.sztus.lib.back.end.basic.object.domain.StorageProviderParameter;
 import com.sztus.lib.back.end.basic.object.request.*;
@@ -20,7 +18,6 @@ import com.sztus.lib.back.end.basic.type.enumerate.*;
 import com.sztus.lib.back.end.basic.utils.ConvertUtil;
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 
@@ -38,14 +35,11 @@ import java.util.regex.Pattern;
 public class StorageService {
 
     private final S3ProviderByAws s3ProviderByAws;
-    private final FileMappingService fileMappingService;
     private final StorageProviderService storageProviderService;
     private final StorageProviderParameterService storageProviderParameterService;
 
-
-    public StorageService(S3ProviderByAws s3ProviderByAws, FileMappingService fileMappingService, StorageProviderService storageProviderService, StorageProviderParameterService storageProviderParameterService) {
+    public StorageService(S3ProviderByAws s3ProviderByAws, StorageProviderService storageProviderService, StorageProviderParameterService storageProviderParameterService) {
         this.s3ProviderByAws = s3ProviderByAws;
-        this.fileMappingService = fileMappingService;
         this.storageProviderService = storageProviderService;
         this.storageProviderParameterService = storageProviderParameterService;
     }
@@ -73,21 +67,8 @@ public class StorageService {
             s3Client.putObject(relativePath, fileName, inputStream, objectMetadata);
 
             String objectUrl = s3ProviderByAws.getObjectUrl(s3Client, relativePath, fileName);
-
-
             StorageFileUploadResponse storageFileUploadResponse = new StorageFileUploadResponse();
-
-            String uuid = UUID.randomUUID().toString().replace("-", "");
-
-            FileMapping fileMapping = new FileMapping();
-            fileMapping.setFileCode(uuid);
-            fileMapping.setFileName(fileName);
-            fileMapping.setRelativePath(relativePath);
-            fileMapping.setObjectUrl(objectUrl);
-            fileMappingService.saveFileMapping(fileMapping);
-
             storageFileUploadResponse.setFileUrl(objectUrl);
-            storageFileUploadResponse.setFileCode(uuid);
             return storageFileUploadResponse;
         } catch (Exception e) {
             log.error("StorageService uploadFile error", e);
