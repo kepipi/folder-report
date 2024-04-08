@@ -24,7 +24,7 @@ public interface LocationReportAction {
 
     String STORAGE_UPLOAD_FILE = "/storage/upload-file";
 
-    String DOWNLOAD_FILE = "/storage/download-file/{fileCode}";
+    String UPLOAD_MULTIPART_FILE = "/storage/upload-multipart-file";
 
 
     String NEW_REPORT = "/new-report";
