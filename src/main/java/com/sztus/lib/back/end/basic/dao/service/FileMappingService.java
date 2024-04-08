@@ -1,6 +1,5 @@
 package com.sztus.lib.back.end.basic.dao.service;
 
-import com.baomidou.dynamic.datasource.annotation.DSTransactional;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -30,7 +29,6 @@ public class FileMappingService extends ServiceImpl<FileMappingMapper, FileMappi
     }
 
     @DsWriter
-    @DSTransactional
     public void saveFileMapping(FileMapping fileMapping) {
         saveOrUpdate(fileMapping);
     }

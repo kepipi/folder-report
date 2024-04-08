@@ -12,5 +12,7 @@ import java.util.List;
 @Data
 public class BatchUploadFileUrlRequest {
 
-    public List<String> fileUrlList;
+    public String url;
+
+    public Long id;
 }

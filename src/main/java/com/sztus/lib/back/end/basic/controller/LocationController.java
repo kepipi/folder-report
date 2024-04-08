@@ -1,6 +1,7 @@
 package com.sztus.lib.back.end.basic.controller;
 
 import com.sztus.lib.back.end.basic.object.domain.File;
+import com.sztus.lib.back.end.basic.object.domain.Item;
 import com.sztus.lib.back.end.basic.object.domain.Location;
 import com.sztus.lib.back.end.basic.object.request.BatchUploadFileUrlRequest;
 import com.sztus.lib.back.end.basic.object.response.LocationItemResponse;
@@ -57,8 +58,7 @@ public class LocationController {
     }
 
     @PostMapping(LocationReportAction.AI_ANALYSE)
-    public Result<String> aiAnalyse(@RequestBody BatchUploadFileUrlRequest request) throws IOException {
-        fileBusinessService.aiAnalyse(request.fileUrlList);
-        return Result.ok();
+    public Result<List<Item>> aiAnalyse(@RequestBody List<BatchUploadFileUrlRequest> request) {
+        return Result.ok(fileBusinessService.aiAnalyse(request));
     }
 }
