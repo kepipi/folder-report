@@ -3,7 +3,9 @@ package com.sztus.lib.back.end.basic.object.domain;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
@@ -13,6 +15,8 @@ import java.io.Serializable;
  */
 @Data
 @TableName("location")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Location implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -27,7 +31,5 @@ public class Location implements Serializable {
     private String description;
 
     private Long createdAt;
-
-    private Long updatedAt;
 
 }
