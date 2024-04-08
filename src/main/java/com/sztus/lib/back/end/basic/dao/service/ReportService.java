@@ -19,9 +19,6 @@ import com.sztus.lib.back.end.basic.dao.mapper.FileMapper;
 @Service
 public class ReportService extends ServiceImpl<ReportMapper, Report> {
 
-    public List<Report> getbyId(Long id) {
-        return list(Wrappers.<Report>lambdaQuery().eq(Report::getId, id));
-    }
 
     public List<FileItemDTO> listFileItem(Long reportId) {
         return getBaseMapper().selectJoinList(FileItemDTO.class, new MPJLambdaWrapper<Report>()

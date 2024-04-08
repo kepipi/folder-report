@@ -15,13 +15,6 @@ import java.util.List;
 @RestController
 public class HelloController {
 
-    @Autowired
-    private ReportService reportService;
-
-    @GetMapping("/hello")
-    public Result<List<Report>> hello() {
-        return Result.ok(reportService.getbyId(2L));
-    }
 
     @GetMapping("/hello2")
     public Result<String> hello2() {

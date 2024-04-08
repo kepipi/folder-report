@@ -33,4 +33,6 @@ public interface LocationReportAction {
     String SAVE_ITEM = "/save-item";
 
     String DELETE_ITEM = "/delete-item";
+
+    String UPLOAD_REPORT = "/upload-report";
 }

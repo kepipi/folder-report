@@ -15,6 +15,7 @@ public enum ErrorCode implements BaseError {
     FAILURE(-1, "Failure"),
     INVALID_TOKEN(-10001, "Invalid token"),
     PARAMETER_INCOMPLETE(-10002, "Parameter incomplete"),
+    ABNORMAL_PARAMETER(-10003, "Abnormal parameter"),
     ;
 
     ErrorCode(Integer code, String message) {

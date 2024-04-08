@@ -1,18 +1,25 @@
 package com.sztus.lib.back.end.basic.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.sztus.lib.back.end.basic.dao.service.FileService;
 import com.sztus.lib.back.end.basic.dao.service.ItemService;
 import com.sztus.lib.back.end.basic.dao.service.LocationService;
 import com.sztus.lib.back.end.basic.dao.service.ReportService;
+import com.sztus.lib.back.end.basic.exception.BusinessException;
 import com.sztus.lib.back.end.basic.object.domain.File;
 import com.sztus.lib.back.end.basic.object.domain.Item;
 import com.sztus.lib.back.end.basic.object.domain.Location;
 import com.sztus.lib.back.end.basic.object.domain.Report;
 import com.sztus.lib.back.end.basic.object.dto.FileItemDTO;
+import com.sztus.lib.back.end.basic.object.request.StorageFileUploadRequest;
+import com.sztus.lib.back.end.basic.object.response.StorageFileUploadResponse;
 import com.sztus.lib.back.end.basic.type.enumerate.CleanlinessEnum;
 import com.sztus.lib.back.end.basic.type.enumerate.ConditionEnum;
+import com.sztus.lib.back.end.basic.type.enumerate.ErrorCode;
+import com.sztus.lib.back.end.basic.type.enumerate.StorageError;
 import com.sztus.lib.back.end.basic.utils.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +42,9 @@ public class ReportBusinessService {
     private ReportService reportService;
     @Resource
     private LocationService locationService;
+
+    @Resource
+    private StorageService storageService;
 
     public List<Report> listReport(Long housePropertyId) {
         List<Report> reportList = reportService.list(Wrappers.<Report>lambdaQuery().eq(Report::getHousePropertyId, housePropertyId));
@@ -76,4 +86,16 @@ public class ReportBusinessService {
         return fileItemDTOS;
     }
 
+
+    public String uploadPdf(Long reportId, StorageFileUploadRequest storageFileUploadRequest) throws BusinessException {
+        StorageFileUploadResponse storageFileUploadResponse = storageService.uploadFileToS3(storageFileUploadRequest);
+        Report reports = reportService.getById(reportId);
+        if (!ObjectUtils.isEmpty(reports)) {
+            reports.setDownloadUrl(storageFileUploadResponse.getFileUrl());
+            reportService.saveOrUpdate(reports);
+        } else {
+            throw new BusinessException(ErrorCode.ABNORMAL_PARAMETER);
+        }
+        return storageFileUploadResponse.getFileUrl();
+    }
 }
