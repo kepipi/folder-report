@@ -1,5 +1,6 @@
 package com.sztus.lib.back.end.basic.exception;
 
+import com.sztus.lib.back.end.basic.object.base.BaseError;
 import com.sztus.lib.back.end.basic.type.constant.CodeConst;
 
 /**
@@ -40,6 +41,18 @@ public class BusinessException extends Exception {
 
         this.code = code;
         this.message = message;
+    }
+
+    /**
+     * 仅包含message，不记录栈异常，高性能
+     *
+     * @param baseError 参照错误枚举定义
+     */
+    public BusinessException(BaseError baseError) {
+        this(baseError.getMessage());
+
+        this.code = baseError.getCode();
+        this.message = baseError.getMessage();
     }
 
 }

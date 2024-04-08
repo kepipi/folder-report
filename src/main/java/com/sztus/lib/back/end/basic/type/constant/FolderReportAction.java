@@ -21,4 +21,11 @@ public interface FolderReportAction {
 
     String AI_ANALYSE = "/ai-analyse";
 
+
+    String STORAGE_UPLOAD_FILE = "/storage/upload-file";
+
+    String DOWNLOAD_FILE = "/storage/download-file/{fileCode}";
+
+
+
 }
