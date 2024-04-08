@@ -1,6 +1,5 @@
 package com.sztus.lib.back.end.basic.object.annotation;
 
-import com.baomidou.dynamic.datasource.annotation.DS;
 
 import java.lang.annotation.*;
 
@@ -11,6 +10,5 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@DS("reader")
 public @interface DsReader {
 }

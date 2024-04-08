@@ -1,14 +1,23 @@
 package com.sztus.lib.back.end.basic.service;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.sztus.lib.back.end.basic.dao.service.FileService;
+import com.sztus.lib.back.end.basic.dao.service.ItemService;
 import com.sztus.lib.back.end.basic.object.domain.File;
+import com.sztus.lib.back.end.basic.object.domain.Item;
+import com.sztus.lib.back.end.basic.object.request.BatchUploadFileUrlRequest;
 import com.sztus.lib.back.end.basic.type.constant.JsonKey;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Resource;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,11 +28,14 @@ import java.util.List;
 public class FileBusinessService {
 
 
-    @Autowired
+    @Resource
     private FileService fileService;
 
-    @Autowired
+    @Resource
     private ResetTemplateService resetTemplateService;
+
+    @Resource
+    private ItemService itemService;
 
 
     private static final String AI_URL = "http://ec2-13-42-55-109.eu-west-2.compute.amazonaws.com:8080/imageDescription";
@@ -36,12 +48,32 @@ public class FileBusinessService {
         fileService.removeById(fileId);
     }
 
-    public void aiAnalyse(List<String> fileUrlList) throws IOException {
-        for (String url : fileUrlList) {
+    public List<Item> aiAnalyse(List<BatchUploadFileUrlRequest> requestList) {
+        List<Item> itemList = new ArrayList<>();
+        for (BatchUploadFileUrlRequest request : requestList) {
             JSONObject data = new JSONObject();
-            data.put(JsonKey.FILE_URL, url);
-            String requestBody = resetTemplateService.doPostByRequestBody(AI_URL, data.toJSONString());
-            System.out.println(requestBody);
+            data.put(JsonKey.FILE_URL, request.getUrl());
+            String responseBody = resetTemplateService.doPostByRequestBody(AI_URL, data.toJSONString());
+            JSONObject responseJson = JSONObject.parseObject(responseBody);
+            String description = responseJson.getString("Description");
+            JSONArray itemJsonList = JSON.parseArray(description);
+            if (!itemJsonList.isEmpty()) {
+                for (int i = 0; i < itemJsonList.size(); i++) {
+                    JSONObject itemJson = itemJsonList.getJSONObject(i);
+                    Item item = new Item();
+                    item.setFileId(request.getId());
+                    item.setItemName(itemJson.getString("ItemName"));
+                    item.setComments(itemJson.getString("Suggested"));
+                    item.setCleanliness(itemJson.getString("Cleanliness"));
+                    item.setQuantity(itemJson.getString("Quantity"));
+                    item.setCondition(itemJson.getString("Description"));
+                    itemList.add(item);
+                }
+            }
         }
+        if (!CollectionUtils.isEmpty(itemList)) {
+            itemService.saveBatch(itemList);
+        }
+        return itemList;
     }
 }
