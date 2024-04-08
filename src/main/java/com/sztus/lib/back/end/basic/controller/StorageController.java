@@ -5,11 +5,8 @@ import com.sztus.lib.back.end.basic.object.request.*;
 import com.sztus.lib.back.end.basic.object.response.StorageFileUploadResponse;
 import com.sztus.lib.back.end.basic.service.StorageService;
 import com.sztus.lib.back.end.basic.type.Result;
-import com.sztus.lib.back.end.basic.type.constant.CommonConst;
-import com.sztus.lib.back.end.basic.type.constant.FolderReportAction;
 import com.sztus.lib.back.end.basic.type.enumerate.StorageError;
 import com.sztus.lib.back.end.basic.utils.ConvertUtil;
-import com.sztus.lib.back.end.basic.utils.HttpUtil;
 import com.sztus.lib.back.end.basic.type.constant.LocationReportAction;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -18,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Objects;
 
 @RestController
 @Slf4j
@@ -38,7 +34,7 @@ public class StorageController {
         return Result.ok(storageService.uploadFileToS3(request));
     }
 
-    @PostMapping(FolderReportAction.UPLOAD_MULTIPART_FILE)
+    @PostMapping(LocationReportAction.UPLOAD_MULTIPART_FILE)
     public Result<StorageFileUploadResponse> uploadFileToS3Frontend(
             HttpServletRequest httpServletRequest,
             @RequestParam("file") MultipartFile file,
