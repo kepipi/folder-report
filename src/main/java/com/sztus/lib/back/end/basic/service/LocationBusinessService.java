@@ -94,7 +94,7 @@ public class LocationBusinessService {
         file.setLocationId(locationId);
         file.setName(storageFileUploadResponse.getFileCode());
         file.setUrl(storageFileUploadResponse.getFileUrl());
-        file.setUpdatedAt(DateUtil.getCurrentTimestamp());
+        file.setCreatedAt(DateUtil.getCurrentTimestamp());
         fileService.save(file);
         return file;
     }
