@@ -1,8 +1,7 @@
 package com.sztus.lib.back.end.basic.dao.mapper;
 
 import com.github.yulichang.base.MPJBaseMapper;
-import com.sztus.lib.back.end.basic.object.domain.File;
-import com.sztus.lib.back.end.basic.object.domain.Folder;
+import com.sztus.lib.back.end.basic.object.domain.Location;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -11,5 +10,5 @@ import org.apache.ibatis.annotations.Mapper;
  */
 
 @Mapper
-public interface FolderMapper extends MPJBaseMapper<Folder> {
+public interface LocationMapper extends MPJBaseMapper<Location> {
 }

@@ -9,10 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -30,10 +26,10 @@ public class FileBusinessService {
     private ResetTemplateService resetTemplateService;
 
 
-    private final String AI_URL = "http://ec2-13-42-55-109.eu-west-2.compute.amazonaws.com:8080/imageDescription";
+    private static final String AI_URL = "http://ec2-13-42-55-109.eu-west-2.compute.amazonaws.com:8080/imageDescription";
 
-    public List<File> listFile(Long folderId) {
-        return fileService.list(new LambdaQueryWrapper<File>().eq(File::getFolderId, folderId));
+    public List<File> listFile(Long locationId) {
+        return fileService.list(new LambdaQueryWrapper<File>().eq(File::getLocationId, locationId));
     }
 
     public void deleteFile(Long fileId) {
