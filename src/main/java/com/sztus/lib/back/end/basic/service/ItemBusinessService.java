@@ -2,10 +2,14 @@ package com.sztus.lib.back.end.basic.service;
 
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.sztus.lib.back.end.basic.dao.service.FileService;
+import com.sztus.lib.back.end.basic.dao.service.ItemService;
+import com.sztus.lib.back.end.basic.object.domain.Item;
 import com.sztus.lib.back.end.basic.object.dto.FileItemDTO;
 import com.sztus.lib.back.end.basic.object.response.FileItemResponse;
 import com.sztus.lib.back.end.basic.object.view.FileView;
 import com.sztus.lib.back.end.basic.object.view.ItemView;
+import com.sztus.lib.back.end.basic.type.enumerate.CleanlinessEnum;
+import com.sztus.lib.back.end.basic.type.enumerate.ConditionEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +26,8 @@ import java.util.stream.Collectors;
 public class ItemBusinessService {
 
     private final FileService fileService;
+
+    private final ItemService itemService;
 
     public FileItemResponse listFileItem(Long locationId) {
         List<FileView> fileList = new ArrayList<>();
@@ -41,8 +47,8 @@ public class ItemBusinessService {
                         .itemId(item.getItemId())
                         .itemName(item.getItemName())
                         .quantity(item.getQuantity())
-                        .cleanliness(item.getCleanliness())
-                        .condition(item.getCondition())
+                        .cleanliness(CleanlinessEnum.getTextByValue(item.getCleanliness()))
+                        .condition(ConditionEnum.getTextByValue(item.getCondition()))
                         .comments(item.getComments())
                         .build()).collect(Collectors.toList()));
             });
@@ -53,32 +59,6 @@ public class ItemBusinessService {
                 .itemList(itemList)
                 .build();
     }
-
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.sztus.lib.back.end.basic.dao.service.ItemService;
-import com.sztus.lib.back.end.basic.dao.service.LocationService;
-import com.sztus.lib.back.end.basic.dao.service.ReportService;
-import com.sztus.lib.back.end.basic.object.domain.Item;
-import com.sztus.lib.back.end.basic.object.domain.Location;
-import com.sztus.lib.back.end.basic.object.domain.Report;
-import com.sztus.lib.back.end.basic.utils.DateUtil;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-/**
- * @author QYP
- * @date 2024/4/7 14:39
- */
-@Service
-public class ItemBusinessService {
-
-    @Resource
-    private ItemService itemService;
 
     public void deleteItem(Long id) {
         itemService.removeById(id);

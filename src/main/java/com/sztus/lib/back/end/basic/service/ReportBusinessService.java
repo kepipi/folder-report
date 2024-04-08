@@ -11,6 +11,8 @@ import com.sztus.lib.back.end.basic.object.domain.Item;
 import com.sztus.lib.back.end.basic.object.domain.Location;
 import com.sztus.lib.back.end.basic.object.domain.Report;
 import com.sztus.lib.back.end.basic.object.dto.FileItemDTO;
+import com.sztus.lib.back.end.basic.type.enumerate.CleanlinessEnum;
+import com.sztus.lib.back.end.basic.type.enumerate.ConditionEnum;
 import com.sztus.lib.back.end.basic.utils.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -65,6 +67,12 @@ public class ReportBusinessService {
         if (CollectionUtils.isEmpty(fileItemDTOS)) {
             return Collections.emptyList();
         }
+
+        for (FileItemDTO fileItemDTO : fileItemDTOS) {
+            fileItemDTO.setCleanliness(CleanlinessEnum.getTextByValue(fileItemDTO.getCleanliness()));
+            fileItemDTO.setCondition(ConditionEnum.getTextByValue(fileItemDTO.getCondition()));
+        }
+
         return fileItemDTOS;
     }
 
