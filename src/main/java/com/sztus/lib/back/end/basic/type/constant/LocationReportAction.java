@@ -27,5 +27,6 @@ public interface LocationReportAction {
     String DOWNLOAD_FILE = "/storage/download-file/{fileCode}";
 
 
-
+    String NEW_REPORT = "/new-report";
+    String LIST_ITEMS_BY_REPORT = "/list-items-by-report";
 }

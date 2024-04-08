@@ -3,6 +3,7 @@ package com.sztus.lib.back.end.basic.controller;
 import com.sztus.lib.back.end.basic.object.domain.File;
 import com.sztus.lib.back.end.basic.object.domain.Location;
 import com.sztus.lib.back.end.basic.object.request.BatchUploadFileUrlRequest;
+import com.sztus.lib.back.end.basic.object.response.LocationItemResponse;
 import com.sztus.lib.back.end.basic.service.FileBusinessService;
 import com.sztus.lib.back.end.basic.service.LocationBusinessService;
 import com.sztus.lib.back.end.basic.type.Result;
@@ -10,6 +11,7 @@ import com.sztus.lib.back.end.basic.type.constant.LocationReportAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.List;
 
@@ -20,14 +22,14 @@ import java.util.List;
 @RestController
 public class LocationController {
 
-    @Autowired
+    @Resource
     private LocationBusinessService locationBusinessService;
 
-    @Autowired
+    @Resource
     private FileBusinessService fileBusinessService;
 
     @GetMapping(LocationReportAction.LIST_LOCATION)
-    public Result<List<Location>> listLocation(@RequestParam Long reportId) {
+    public Result<LocationItemResponse> listLocation(@RequestParam Long reportId) {
         return Result.ok(locationBusinessService.listLocation(reportId));
     }
 
