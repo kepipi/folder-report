@@ -5,15 +5,15 @@ package com.sztus.lib.back.end.basic.type.constant;
  * @date 2024/4/7 14:42
  */
 
-public interface FolderReportAction {
+public interface LocationReportAction {
 
-    String LIST_FOLDER = "/list-folder";
+    String LIST_LOCATION = "/list-location";
 
     String LIST_FILE = "/list-file";
 
     String LIST_REPORT = "/list-report";
 
-    String SAVE_FOLDER = "/save-folder";
+    String SAVE_LOCATION = "/save-location";
 
     String UPLOAD_FILE = "/upload-file";
 

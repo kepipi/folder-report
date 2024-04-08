@@ -10,6 +10,7 @@ import com.sztus.lib.back.end.basic.type.constant.FolderReportAction;
 import com.sztus.lib.back.end.basic.type.enumerate.StorageError;
 import com.sztus.lib.back.end.basic.utils.ConvertUtil;
 import com.sztus.lib.back.end.basic.utils.HttpUtil;
+import com.sztus.lib.back.end.basic.type.constant.LocationReportAction;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,7 @@ public class StorageController {
     }
 
 
-    @PostMapping(FolderReportAction.STORAGE_UPLOAD_FILE)
+    @PostMapping(LocationReportAction.STORAGE_UPLOAD_FILE)
     public Result<StorageFileUploadResponse> uploadFileToS3Backend(
             @RequestBody @Valid StorageFileUploadRequest request
     ) throws BusinessException {

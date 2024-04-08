@@ -78,6 +78,7 @@
             <version>1.4.4</version>
         </dependency>
 
+
         <!--    google 工具包，提供下划线转驼峰，线程池等工具    -->
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -127,7 +128,6 @@
         </dependency>
 
     </dependencies>
-
 
 
 </project>
