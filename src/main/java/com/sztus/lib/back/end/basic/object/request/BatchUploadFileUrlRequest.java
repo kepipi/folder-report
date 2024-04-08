@@ -14,5 +14,5 @@ public class BatchUploadFileUrlRequest {
 
     public String url;
 
-    public Long id;
+    public Long fileId;
 }

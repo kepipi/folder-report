@@ -10,6 +10,8 @@ import com.sztus.lib.back.end.basic.object.domain.File;
 import com.sztus.lib.back.end.basic.object.domain.Item;
 import com.sztus.lib.back.end.basic.object.request.BatchUploadFileUrlRequest;
 import com.sztus.lib.back.end.basic.type.constant.JsonKey;
+import com.sztus.lib.back.end.basic.type.enumerate.CleanlinessEnum;
+import com.sztus.lib.back.end.basic.type.enumerate.ConditionEnum;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -68,8 +70,8 @@ public class FileBusinessService {
                     item.setComments(itemJson.getString("Suggested"));
                     item.setQuantity(itemJson.getString("Quantity"));
                     item.setDescription(itemJson.getString("Description"));
-                    item.setCondition(itemJson.getString("Condition"));
-                    item.setCleanliness(itemJson.getString("Cleanliness"));
+                    item.setCondition(ConditionEnum.getTextByValue(itemJson.getString("Condition")));
+                    item.setCleanliness(CleanlinessEnum.getTextByValue(itemJson.getString("Cleanliness")));
                     itemList.add(item);
                 }
             }
