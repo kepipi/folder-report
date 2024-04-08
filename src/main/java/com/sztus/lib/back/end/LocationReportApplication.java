@@ -7,9 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author Austin
  */
 @SpringBootApplication
-public class FolderReportApplication {
+public class LocationReportApplication {
     public static void main(String[] args) {
-        SpringApplication springApplication = new SpringApplication(FolderReportApplication.class);
+        SpringApplication springApplication = new SpringApplication(LocationReportApplication.class);
         springApplication.run(args);
     }
 }

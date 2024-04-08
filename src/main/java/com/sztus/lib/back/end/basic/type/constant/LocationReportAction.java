@@ -5,7 +5,7 @@ package com.sztus.lib.back.end.basic.type.constant;
  * @date 2024/4/7 14:42
  */
 
-public interface FolderReportAction {
+public interface LocationReportAction {
 
     String LIST_LOCATION = "/list-location";
 
