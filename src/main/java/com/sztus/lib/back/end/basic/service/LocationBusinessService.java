@@ -51,6 +51,9 @@ public class LocationBusinessService {
     public LocationItemResponse listLocation(Long reportId) {
         LocationItemResponse locationItemResponse = new LocationItemResponse();
         List<Location> locationList = locationService.list(Wrappers.<Location>lambdaQuery().eq(Location::getReportId, reportId));
+        if (CollectionUtils.isEmpty(locationList)) {
+            return locationItemResponse;
+        }
         locationItemResponse.setLocationList(locationList);
         //根据location获取file
         List<File> fileList = fileService.list(Wrappers.<File>lambdaQuery()
@@ -61,6 +64,9 @@ public class LocationBusinessService {
         //根据file获取item
         List<Item> itemList = itemService.list(Wrappers.<Item>lambdaQuery()
                 .in(Item::getFileId, fileList.stream().map(File::getId).collect(Collectors.toList())));
+        if (CollectionUtils.isEmpty(itemList)) {
+            return locationItemResponse;
+        }
         //用于组装数据返回前端
         Map<Long, Location> locationMap = locationList.stream().collect(Collectors.toMap(Location::getId, location -> location));
         Map<Long, List<File>> fileLocationMap = fileList.stream().collect(Collectors.groupingBy(File::getLocationId));
@@ -75,7 +81,9 @@ public class LocationBusinessService {
             List<Item> itemResponseList = new ArrayList<>();
             for (File file : files) {
                 List<Item> items = itemMap.get(file.getId());
-                itemResponseList.addAll(items);
+                if (CollectionUtils.isNotEmpty(items)) {
+                    itemResponseList.addAll(items);
+                }
             }
             itemResponse.setItemList(itemResponseList);
             itemResponses.add(itemResponse);
