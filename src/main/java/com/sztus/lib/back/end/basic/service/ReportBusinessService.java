@@ -77,12 +77,6 @@ public class ReportBusinessService {
         if (CollectionUtils.isEmpty(fileItemDTOS)) {
             return Collections.emptyList();
         }
-
-        for (FileItemDTO fileItemDTO : fileItemDTOS) {
-            fileItemDTO.setCleanliness(CleanlinessEnum.getTextByValue(fileItemDTO.getCleanliness()));
-            fileItemDTO.setCondition(ConditionEnum.getTextByValue(fileItemDTO.getCondition()));
-        }
-
         return fileItemDTOS;
     }
 
