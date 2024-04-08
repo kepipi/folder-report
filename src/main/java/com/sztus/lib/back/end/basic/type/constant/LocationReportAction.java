@@ -29,4 +29,8 @@ public interface LocationReportAction {
 
     String NEW_REPORT = "/new-report";
     String LIST_ITEMS_BY_REPORT = "/list-items-by-report";
+
+    String SAVE_ITEM = "/save-item";
+
+    String DELETE_ITEM = "/delete-item";
 }

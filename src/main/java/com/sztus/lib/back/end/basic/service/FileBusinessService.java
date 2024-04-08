@@ -10,6 +10,8 @@ import com.sztus.lib.back.end.basic.object.domain.File;
 import com.sztus.lib.back.end.basic.object.domain.Item;
 import com.sztus.lib.back.end.basic.object.request.BatchUploadFileUrlRequest;
 import com.sztus.lib.back.end.basic.type.constant.JsonKey;
+import com.sztus.lib.back.end.basic.type.enumerate.CleanlinessEnum;
+import com.sztus.lib.back.end.basic.type.enumerate.ConditionEnum;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,7 +52,9 @@ public class FileBusinessService {
 
     public List<Item> aiAnalyse(List<BatchUploadFileUrlRequest> requestList) {
         List<Item> itemList = new ArrayList<>();
+        List<Long> fileIdList = new ArrayList<>();
         for (BatchUploadFileUrlRequest request : requestList) {
+            fileIdList.add(request.getFileId());
             JSONObject data = new JSONObject();
             data.put(JsonKey.FILE_URL, request.getUrl());
             String responseBody = resetTemplateService.doPostByRequestBody(AI_URL, data.toJSONString());
@@ -61,16 +65,21 @@ public class FileBusinessService {
                 for (int i = 0; i < itemJsonList.size(); i++) {
                     JSONObject itemJson = itemJsonList.getJSONObject(i);
                     Item item = new Item();
-                    item.setFileId(request.getId());
+                    item.setFileId(request.getFileId());
                     item.setItemName(itemJson.getString("ItemName"));
                     item.setComments(itemJson.getString("Suggested"));
-                    item.setCleanliness(itemJson.getString("Cleanliness"));
                     item.setQuantity(itemJson.getString("Quantity"));
-                    item.setCondition(itemJson.getString("Description"));
+                    item.setDescription(itemJson.getString("Description"));
+                    item.setCondition(ConditionEnum.getTextByValue(itemJson.getString("Condition")));
+                    item.setCleanliness(CleanlinessEnum.getTextByValue(itemJson.getString("Cleanliness")));
                     itemList.add(item);
                 }
             }
         }
+        if (!CollectionUtils.isEmpty(fileIdList)) {
+            itemService.remove(new LambdaQueryWrapper<Item>().in(Item::getFileId, fileIdList));
+        }
+
         if (!CollectionUtils.isEmpty(itemList)) {
             itemService.saveBatch(itemList);
         }
