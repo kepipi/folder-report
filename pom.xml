@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.sztus</groupId>
-    <artifactId>back-end-framework</artifactId>
+    <artifactId>folder-report</artifactId>
     <version>4.1.0</version>
 
     <parent>
