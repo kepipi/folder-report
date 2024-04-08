@@ -7,7 +7,6 @@ import com.sztus.lib.back.end.basic.object.domain.Location;
 import com.sztus.lib.back.end.basic.object.request.BatchUploadFileUrlRequest;
 import com.sztus.lib.back.end.basic.object.request.StorageFileUploadRequest;
 import com.sztus.lib.back.end.basic.object.response.LocationItemResponse;
-import com.sztus.lib.back.end.basic.object.response.StorageFileUploadResponse;
 import com.sztus.lib.back.end.basic.service.FileBusinessService;
 import com.sztus.lib.back.end.basic.service.LocationBusinessService;
 import com.sztus.lib.back.end.basic.type.Result;
@@ -15,13 +14,11 @@ import com.sztus.lib.back.end.basic.type.constant.LocationReportAction;
 import com.sztus.lib.back.end.basic.type.enumerate.StorageError;
 import com.sztus.lib.back.end.basic.utils.ConvertUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -48,7 +45,7 @@ public class LocationController {
     }
 
     @PostMapping(LocationReportAction.SAVE_LOCATION)
-    public Result<String> saveFolder(@RequestBody Location location) {
+    public Result<String> saveLocation(@RequestBody Location location) {
         locationBusinessService.saveLocation(location);
         return Result.ok();
     }
