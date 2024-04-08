@@ -6,16 +6,26 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.sztus.lib.back.end.basic.dao.service.FileService;
 import com.sztus.lib.back.end.basic.dao.service.ItemService;
 import com.sztus.lib.back.end.basic.dao.service.LocationService;
+import com.sztus.lib.back.end.basic.exception.BusinessException;
 import com.sztus.lib.back.end.basic.object.domain.File;
 import com.sztus.lib.back.end.basic.object.domain.Item;
 import com.sztus.lib.back.end.basic.object.domain.Location;
 import com.sztus.lib.back.end.basic.object.domain.Report;
+import com.sztus.lib.back.end.basic.object.request.StorageFileUploadRequest;
 import com.sztus.lib.back.end.basic.object.response.ItemResponse;
 import com.sztus.lib.back.end.basic.object.response.LocationItemResponse;
+import com.sztus.lib.back.end.basic.object.response.StorageFileUploadResponse;
+import com.sztus.lib.back.end.basic.type.Result;
+import com.sztus.lib.back.end.basic.type.enumerate.StorageError;
+import com.sztus.lib.back.end.basic.utils.ConvertUtil;
+import com.sztus.lib.back.end.basic.utils.DateUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +44,8 @@ public class LocationBusinessService {
     private FileService fileService;
     @Resource
     private ItemService itemService;
+    @Resource
+    private StorageService storageService;
 
     
     public LocationItemResponse listLocation(Long reportId) {
@@ -74,5 +86,16 @@ public class LocationBusinessService {
 
     public void saveLocation(Location location) {
         locationService.saveOrUpdate(location);
+    }
+
+    public File uploadFile(Long locationId, StorageFileUploadRequest storageFileUploadRequest) throws BusinessException {
+        StorageFileUploadResponse storageFileUploadResponse = storageService.uploadFileToS3(storageFileUploadRequest);
+        File file = new File();
+        file.setLocationId(locationId);
+        file.setName(storageFileUploadResponse.getFileCode());
+        file.setUrl(storageFileUploadResponse.getFileUrl());
+        file.setUpdatedAt(DateUtil.getCurrentTimestamp());
+        fileService.save(file);
+        return file;
     }
 }

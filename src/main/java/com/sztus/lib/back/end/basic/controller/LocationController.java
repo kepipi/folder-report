@@ -1,18 +1,26 @@
 package com.sztus.lib.back.end.basic.controller;
 
+import com.sztus.lib.back.end.basic.exception.BusinessException;
 import com.sztus.lib.back.end.basic.object.domain.File;
 import com.sztus.lib.back.end.basic.object.domain.Item;
 import com.sztus.lib.back.end.basic.object.domain.Location;
 import com.sztus.lib.back.end.basic.object.request.BatchUploadFileUrlRequest;
+import com.sztus.lib.back.end.basic.object.request.StorageFileUploadRequest;
 import com.sztus.lib.back.end.basic.object.response.LocationItemResponse;
+import com.sztus.lib.back.end.basic.object.response.StorageFileUploadResponse;
 import com.sztus.lib.back.end.basic.service.FileBusinessService;
 import com.sztus.lib.back.end.basic.service.LocationBusinessService;
 import com.sztus.lib.back.end.basic.type.Result;
 import com.sztus.lib.back.end.basic.type.constant.LocationReportAction;
+import com.sztus.lib.back.end.basic.type.enumerate.StorageError;
+import com.sztus.lib.back.end.basic.utils.ConvertUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 
@@ -46,9 +54,35 @@ public class LocationController {
     }
 
     @PostMapping(LocationReportAction.UPLOAD_FILE)
-    public Result<String> uploadFile() {
-        //todo
-        return Result.ok();
+    public Result<File> uploadFile(HttpServletRequest httpServletRequest,
+                                     @RequestParam("locationId") Long locationId,
+                                     @RequestParam("file") MultipartFile file,
+                                     @RequestParam("path") String path,
+                                   @RequestParam(value = "mode", required = false) Integer mode,
+                                   @RequestParam(value = "acl", required = false) Integer acl,
+                                   @RequestParam(value = "contentType", required = false) String contentType,
+                                   @RequestParam(value = "domainName", required = false) String domainName) {
+        try {
+
+            String fileBody = ConvertUtil.streamToString(file.getInputStream());
+
+            if (StringUtils.isBlank(fileBody)) {
+                return Result.fail(new BusinessException(StorageError.INVALID_REQUEST_PARAMETER));
+            }
+
+            StorageFileUploadRequest uploadFileRequest = new StorageFileUploadRequest();
+            uploadFileRequest.setFileBody(fileBody);
+            uploadFileRequest.setFileName(file.getOriginalFilename());
+            uploadFileRequest.setMode(mode);
+            uploadFileRequest.setPath(path);
+            uploadFileRequest.setAcl(acl);
+            uploadFileRequest.setContentType(contentType);
+            uploadFileRequest.setDomainName(domainName);
+
+            return Result.ok(locationBusinessService.uploadFile(locationId, uploadFileRequest));
+        } catch (Exception e) {
+            return Result.fail(e.getMessage());
+        }
     }
 
     @DeleteMapping(LocationReportAction.DELETE_FILE)
