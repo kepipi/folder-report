@@ -24,13 +24,13 @@ public class ReportController {
     private ReportBusinessService reportBusinessService;
 
     @GetMapping(LocationReportAction.LIST_REPORT)
-    public Result<List<Report>> listReport(@RequestParam("house_property_id") Long housePropertyId) {
+    public Result<List<Report>> listReport(@RequestParam("housePropertyId") Long housePropertyId) {
         return Result.ok(reportBusinessService.listReport(housePropertyId));
     }
 
 
     @PostMapping(LocationReportAction.NEW_REPORT)
-    public Result<Void> newReport(@RequestParam("house_property_id") Long housePropertyId) {
+    public Result<Void> newReport(@RequestParam("housePropertyId") Long housePropertyId) {
         reportBusinessService.newReport(housePropertyId);
         return Result.ok();
     }

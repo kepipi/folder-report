@@ -58,6 +58,7 @@ public class FileBusinessService {
             JSONObject data = new JSONObject();
             data.put(JsonKey.FILE_URL, request.getUrl());
             String responseBody = resetTemplateService.doPostByRequestBody(AI_URL, data.toJSONString());
+            System.out.println(request.getUrl() + responseBody);
             JSONObject responseJson = JSONObject.parseObject(responseBody);
             String description = responseJson.getString("Description");
             JSONArray itemJsonList = JSON.parseArray(description);
