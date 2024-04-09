@@ -1,6 +1,6 @@
 server:
   servlet:
-    context-path: /
+    context-path: /report
   port: 11101
 spring:
   datasource:
