@@ -15,6 +15,7 @@ import com.sztus.lib.back.end.basic.object.domain.Location;
 import com.sztus.lib.back.end.basic.object.domain.Report;
 import com.sztus.lib.back.end.basic.object.dto.FileItemDTO;
 import com.sztus.lib.back.end.basic.object.request.StorageFileUploadRequest;
+import com.sztus.lib.back.end.basic.object.response.PreviewReportResponse;
 import com.sztus.lib.back.end.basic.object.response.StorageFileUploadResponse;
 import com.sztus.lib.back.end.basic.type.enumerate.CleanlinessEnum;
 import com.sztus.lib.back.end.basic.type.enumerate.ConditionEnum;
@@ -29,6 +30,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -72,12 +74,22 @@ public class ReportBusinessService {
 
     }
 
-    public List<FileItemDTO> previewReport(Long reportId) {
+    public List<PreviewReportResponse> previewReport(Long reportId) {
         List<FileItemDTO> fileItemDTOS = reportService.listFileItem(reportId);
         if (CollectionUtils.isEmpty(fileItemDTOS)) {
             return Collections.emptyList();
         }
-        return fileItemDTOS;
+
+        List<PreviewReportResponse> previewReportResponseList = new ArrayList<>();
+        Map<String, List<FileItemDTO>> locationNameMap = fileItemDTOS.stream().collect(Collectors.groupingBy(FileItemDTO::getLocationName));
+        locationNameMap.forEach((locationName, fileItemDTOList) -> {
+            previewReportResponseList.add(PreviewReportResponse.builder()
+                    .location(locationName)
+                    .checklistItems(fileItemDTOList)
+                    .build());
+        });
+
+        return previewReportResponseList;
     }
 
 
