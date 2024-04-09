@@ -47,7 +47,7 @@ public class LocationBusinessService {
     @Resource
     private StorageService storageService;
 
-    
+
     public LocationItemResponse listLocation(Long reportId) {
         LocationItemResponse locationItemResponse = new LocationItemResponse();
         List<Location> locationList = locationService.list(Wrappers.<Location>lambdaQuery().eq(Location::getReportId, reportId));
@@ -105,5 +105,18 @@ public class LocationBusinessService {
         file.setCreatedAt(DateUtil.getCurrentTimestamp());
         fileService.save(file);
         return file;
+    }
+
+
+    public void deleteLocation(Long locationId) {
+        locationService.removeById(locationId);
+        List<File> fileList = fileService.list(new LambdaQueryWrapper<File>().eq(File::getLocationId, locationId));
+        if (!CollectionUtils.isEmpty(fileList)) {
+            List<Item> itemList = itemService.list(new LambdaQueryWrapper<Item>().in(Item::getFileId, fileList.stream().map(File::getId).collect(Collectors.toList())));
+            fileService.remove(new LambdaQueryWrapper<File>().eq(File::getLocationId, locationId));
+            if (!CollectionUtils.isEmpty(itemList)) {
+                itemService.remove(new LambdaQueryWrapper<Item>().in(Item::getFileId, fileList.stream().map(File::getId).collect(Collectors.toList())));
+            }
+        }
     }
 }

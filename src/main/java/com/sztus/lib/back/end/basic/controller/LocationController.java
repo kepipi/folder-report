@@ -52,9 +52,9 @@ public class LocationController {
 
     @PostMapping(LocationReportAction.UPLOAD_FILE)
     public Result<File> uploadFile(HttpServletRequest httpServletRequest,
-                                     @RequestParam("locationId") Long locationId,
-                                     @RequestParam("file") MultipartFile file,
-                                     @RequestParam("path") String path,
+                                   @RequestParam("locationId") Long locationId,
+                                   @RequestParam("file") MultipartFile file,
+                                   @RequestParam("path") String path,
                                    @RequestParam(value = "mode", required = false) Integer mode,
                                    @RequestParam(value = "acl", required = false) Integer acl,
                                    @RequestParam(value = "contentType", required = false) String contentType,
@@ -85,6 +85,13 @@ public class LocationController {
     @DeleteMapping(LocationReportAction.DELETE_FILE)
     public Result<String> deleteFile(@RequestParam Long fileId) {
         fileBusinessService.deleteFile(fileId);
+        return Result.ok();
+    }
+
+
+    @DeleteMapping(LocationReportAction.DELETE_LOCATION)
+    public Result<String> deleteLocation(@RequestParam Long locationId) {
+        locationBusinessService.deleteLocation(locationId);
         return Result.ok();
     }
 

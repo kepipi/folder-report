@@ -19,6 +19,8 @@ public interface LocationReportAction {
 
     String DELETE_FILE = "/delete-file";
 
+    String DELETE_LOCATION = "/delete-location";
+
     String AI_ANALYSE = "/ai-analyse";
 
 
