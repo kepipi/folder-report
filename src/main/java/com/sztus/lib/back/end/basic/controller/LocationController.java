@@ -52,9 +52,9 @@ public class LocationController {
 
     @PostMapping(LocationReportAction.UPLOAD_FILE)
     public Result<File> uploadFile(HttpServletRequest httpServletRequest,
-                                     @RequestParam("locationId") Long locationId,
-                                     @RequestParam("file") MultipartFile file,
-                                     @RequestParam("path") String path,
+                                   @RequestParam("locationId") Long locationId,
+                                   @RequestParam("file") MultipartFile file,
+                                   @RequestParam("path") String path,
                                    @RequestParam(value = "mode", required = false) Integer mode,
                                    @RequestParam(value = "acl", required = false) Integer acl,
                                    @RequestParam(value = "contentType", required = false) String contentType,
@@ -88,8 +88,15 @@ public class LocationController {
         return Result.ok();
     }
 
+
+    @DeleteMapping(LocationReportAction.DELETE_LOCATION)
+    public Result<String> deleteLocation(@RequestParam Long locationId) {
+        locationBusinessService.deleteLocation(locationId);
+        return Result.ok();
+    }
+
     @PostMapping(LocationReportAction.AI_ANALYSE)
-    public Result<List<Item>> aiAnalyse(@RequestBody List<BatchUploadFileUrlRequest> request) {
+    public Result<List<Item>> aiAnalyse(@RequestBody List<BatchUploadFileUrlRequest> request) throws BusinessException {
         return Result.ok(fileBusinessService.aiAnalyse(request));
     }
 }
