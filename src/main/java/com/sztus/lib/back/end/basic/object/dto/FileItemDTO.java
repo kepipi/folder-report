@@ -8,6 +8,10 @@ import lombok.Data;
 @Data
 public class FileItemDTO {
 
+    private Long locationId;
+
+    private String locationName;
+
     private Long fileId;
 
     private String fileName;

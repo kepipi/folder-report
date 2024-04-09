@@ -1,17 +1,15 @@
 package com.sztus.lib.back.end.basic.controller;
 
 import com.sztus.lib.back.end.basic.exception.BusinessException;
-import com.sztus.lib.back.end.basic.object.domain.File;
 import com.sztus.lib.back.end.basic.object.domain.Report;
-import com.sztus.lib.back.end.basic.object.dto.FileItemDTO;
 import com.sztus.lib.back.end.basic.object.request.StorageFileUploadRequest;
+import com.sztus.lib.back.end.basic.object.response.PreviewReportResponse;
 import com.sztus.lib.back.end.basic.service.ReportBusinessService;
 import com.sztus.lib.back.end.basic.type.Result;
 import com.sztus.lib.back.end.basic.type.constant.LocationReportAction;
 import com.sztus.lib.back.end.basic.type.enumerate.StorageError;
 import com.sztus.lib.back.end.basic.utils.ConvertUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,7 +43,7 @@ public class ReportController {
     }
 
     @GetMapping("/preview-report")
-    public Result<List<FileItemDTO>> previewReport(@RequestParam Long reportId) {
+    public Result<List<PreviewReportResponse>> previewReport(@RequestParam Long reportId) {
         return Result.ok(reportBusinessService.previewReport(reportId));
     }
 
