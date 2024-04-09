@@ -49,7 +49,7 @@ public class ReportBusinessService {
     private StorageService storageService;
 
     public List<Report> listReport(Long housePropertyId) {
-        List<Report> reportList = reportService.list(Wrappers.<Report>lambdaQuery().eq(Report::getHousePropertyId, housePropertyId));
+        List<Report> reportList = reportService.list(Wrappers.<Report>lambdaQuery().eq(Report::getHousePropertyId, housePropertyId).orderByDesc(Report::getId));
         if (CollectionUtils.isEmpty(reportList)) {
             return Collections.emptyList();
         }
