@@ -15,6 +15,7 @@ import com.sztus.lib.back.end.basic.object.domain.Location;
 import com.sztus.lib.back.end.basic.object.domain.Report;
 import com.sztus.lib.back.end.basic.object.dto.FileItemDTO;
 import com.sztus.lib.back.end.basic.object.request.StorageFileUploadRequest;
+import com.sztus.lib.back.end.basic.object.response.ChecklistItem;
 import com.sztus.lib.back.end.basic.object.response.PreviewReportResponse;
 import com.sztus.lib.back.end.basic.object.response.StorageFileUploadResponse;
 import com.sztus.lib.back.end.basic.type.enumerate.CleanlinessEnum;
@@ -88,9 +89,18 @@ public class ReportBusinessService {
         List<PreviewReportResponse> previewReportResponseList = new ArrayList<>();
         Map<String, List<FileItemDTO>> locationNameMap = fileItemDTOS.stream().collect(Collectors.groupingBy(FileItemDTO::getLocationName));
         locationNameMap.forEach((locationName, fileItemDTOList) -> {
+            Map<String, List<FileItemDTO>> urlMap = fileItemDTOList.stream().collect(Collectors.groupingBy(FileItemDTO::getUrl));
+            List<ChecklistItem> checklistItems = new ArrayList<>();
+            urlMap.forEach((url, fileItems) -> {
+                checklistItems.add(ChecklistItem.builder()
+                        .url(url)
+                        .fileName(fileItems.get(0).getFileName())
+                        .fileItems(fileItems)
+                        .build());
+            });
             previewReportResponseList.add(PreviewReportResponse.builder()
                     .location(locationName)
-                    .checklistItems(fileItemDTOList)
+                    .checklistItems(checklistItems)
                     .build());
         });
 
