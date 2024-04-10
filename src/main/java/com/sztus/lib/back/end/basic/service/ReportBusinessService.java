@@ -49,7 +49,7 @@ public class ReportBusinessService {
     private StorageService storageService;
 
     public List<Report> listReport(Long housePropertyId) {
-        List<Report> reportList = reportService.list(Wrappers.<Report>lambdaQuery().eq(Report::getHousePropertyId, housePropertyId));
+        List<Report> reportList = reportService.list(Wrappers.<Report>lambdaQuery().eq(Report::getHousePropertyId, housePropertyId).orderByDesc(Report::getId));
         if (CollectionUtils.isEmpty(reportList)) {
             return Collections.emptyList();
         }
@@ -59,8 +59,13 @@ public class ReportBusinessService {
     @Transactional(rollbackFor = Exception.class)
     public void newReport(Long housePropertyId) {
         Long currentTimestamp = DateUtil.getCurrentTimestamp();
-
-        Report report = new Report(null, housePropertyId, null, currentTimestamp);
+        List<Report> list = reportService.list();
+        Report report;
+        if (CollectionUtils.isEmpty(list)) {
+            report = new Report(null, housePropertyId, "Report1", null, currentTimestamp);
+        } else {
+            report = new Report(null, housePropertyId, "Report" + list.size() + 1, null, currentTimestamp);
+        }
         reportService.save(report);
 
         List<Location> saveLocationList = new ArrayList<>();

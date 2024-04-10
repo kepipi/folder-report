@@ -26,6 +26,8 @@ public class Report implements Serializable {
 
     private Long housePropertyId;
 
+    private String reportName;
+
     private String downloadUrl;
 
     private Long createdAt;
