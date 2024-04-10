@@ -30,4 +30,6 @@ public class FileItemDTO {
 
     private String comments;
 
+    private String description;
+
 }

@@ -22,4 +22,6 @@ public class ItemView {
 
     private String comments;
 
+    private String description;
+
 }
