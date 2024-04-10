@@ -18,7 +18,7 @@ public class ReportService extends ServiceImpl<ReportMapper, Report> {
     public List<FileItemDTO> listFileItem(Long reportId) {
         return getBaseMapper().selectJoinList(FileItemDTO.class, new MPJLambdaWrapper<Report>()
                 .selectAs(Location::getName, "locationName")
-                .select(File::getUrl)
+                .selectAs(File::getName, "fileName").select(File::getUrl)
                 .select(Item::getItemName, Item::getQuantity, Item::getCleanliness, Item::getCondition, Item::getComments)
                 .innerJoin(Location.class, Location::getReportId, Report::getId)
                 .innerJoin(File.class, File::getLocationId, Location::getId)

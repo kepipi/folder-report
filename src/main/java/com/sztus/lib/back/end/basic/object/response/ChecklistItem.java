@@ -1,5 +1,6 @@
 package com.sztus.lib.back.end.basic.object.response;
 
+import com.sztus.lib.back.end.basic.object.dto.FileItemDTO;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 
@@ -10,10 +11,12 @@ import java.util.List;
  */
 @Data
 @SuperBuilder
-public class PreviewReportResponse {
+public class ChecklistItem {
 
-    private String location;
+    private String fileName;
 
-    private List<ChecklistItem> checklistItems;
+    private String url;
+
+    private List<FileItemDTO> fileItems;
 
 }
