@@ -50,6 +50,7 @@ public class ItemBusinessService {
                         .cleanliness(item.getCleanliness())
                         .condition(item.getCondition())
                         .comments(item.getComments())
+                        .description(item.getDescription())
                         .build()).collect(Collectors.toList()));
             });
         }

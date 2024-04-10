@@ -24,7 +24,7 @@ public class FileService extends ServiceImpl<FileMapper, File> {
                 .selectAs(File::getName, "fileName")
                 .select(File::getUrl)
                 .selectAs(Item::getId, "itemId")
-                .select(Item::getItemName, Item::getQuantity, Item::getCleanliness, Item::getCondition, Item::getComments)
+                .select(Item::getItemName, Item::getQuantity, Item::getCleanliness, Item::getCondition, Item::getComments, Item::getDescription)
                 .innerJoin(Item.class, Item::getFileId, File::getId)
                 .eq(File::getLocationId, locationId));
     }
