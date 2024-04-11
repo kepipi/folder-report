@@ -93,6 +93,12 @@ public class LocationBusinessService {
     }
 
     public void saveLocation(Location location) {
+        List<Location> locationList = locationService.list(Wrappers.<Location>lambdaQuery().eq(Location::getReportId, location.getReportId())
+                .likeLeft(Location::getName, location.getName()));
+        if (CollectionUtils.isNotEmpty(locationList)) {
+            String name = location.getName();
+            location.setName(name + "(" + (locationList.size() + 1) + ")");
+        }
         locationService.saveOrUpdate(location);
     }
 
