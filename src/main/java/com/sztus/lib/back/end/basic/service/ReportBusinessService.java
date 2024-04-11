@@ -65,7 +65,7 @@ public class ReportBusinessService {
         if (CollectionUtils.isEmpty(list)) {
             report = new Report(null, housePropertyId, "Report1", null, currentTimestamp);
         } else {
-            report = new Report(null, housePropertyId, "Report" + list.size() + 1, null, currentTimestamp);
+            report = new Report(null, housePropertyId, "Report" + (list.size() + 1), null, currentTimestamp);
         }
         reportService.save(report);
 
