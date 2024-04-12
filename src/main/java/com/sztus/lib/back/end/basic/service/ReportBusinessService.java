@@ -100,7 +100,7 @@ public class ReportBusinessService {
             if (!CollectionUtils.isEmpty(fileList)) {
                 fileService.removeBatchByIds(fileList.stream().map(File::getId).collect(Collectors.toList()));
                 List<Item> itemList = itemService.list(new LambdaQueryWrapper<Item>().in(Item::getFileId, fileList.stream().map(File::getId).collect(Collectors.toList())));
-                
+
                 if (!CollectionUtils.isEmpty(itemList)) {
                     itemService.removeBatchByIds(itemList.stream().map(Item::getId).collect(Collectors.toList()));
                 }
