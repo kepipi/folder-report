@@ -60,18 +60,17 @@ public class LocationBusinessService {
         //根据file获取item
         List<Item> itemList = itemService.list(Wrappers.<Item>lambdaQuery()
                 .in(Item::getFileId, fileList.stream().map(File::getId).collect(Collectors.toList())));
+        Map<Long, List<File>> fileLocationMap = fileList.stream().collect(Collectors.groupingBy(File::getLocationId));
         if (CollectionUtils.isEmpty(itemList)) {
+            for (Location location : locationItemResponse.getLocationList()) {
+                List<File> files = fileLocationMap.getOrDefault(location.getId(), new ArrayList<File>());
+                location.setName(location.getName() + "(" + files.size() + ")");
+            }
             return locationItemResponse;
         }
         //用于组装数据返回前端
         Map<Long, Location> locationMap = locationList.stream().collect(Collectors.toMap(Location::getId, location -> location));
-        Map<Long, List<File>> fileLocationMap = fileList.stream().collect(Collectors.groupingBy(File::getLocationId));
         Map<Long, List<Item>> itemMap = itemList.stream().collect(Collectors.groupingBy(Item::getFileId));
-
-        for (Location location : locationItemResponse.getLocationList()) {
-            List<File> files = fileLocationMap.getOrDefault(location.getId(), new ArrayList<File>());
-            location.setName(location.getName() + "(" + files.size() + ")");
-        }
 
         List<ItemResponse> itemResponses = new ArrayList<>();
         //将所有的file根据location分组，location下的所有file对应的所有item进行返回
