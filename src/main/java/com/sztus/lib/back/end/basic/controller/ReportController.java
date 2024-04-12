@@ -10,10 +10,7 @@ import com.sztus.lib.back.end.basic.type.constant.LocationReportAction;
 import com.sztus.lib.back.end.basic.type.enumerate.StorageError;
 import com.sztus.lib.back.end.basic.utils.ConvertUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -41,6 +38,13 @@ public class ReportController {
         reportBusinessService.newReport(housePropertyId);
         return Result.ok();
     }
+
+    @DeleteMapping(LocationReportAction.DELETE_REPORT)
+    public Result<String> deleteReport(@RequestParam Long reportId) {
+        reportBusinessService.deleteReport(reportId);
+        return Result.ok();
+    }
+
 
     @GetMapping("/preview-report")
     public Result<List<PreviewReportResponse>> previewReport(@RequestParam Long reportId) {
