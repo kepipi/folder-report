@@ -95,8 +95,8 @@ public class LocationController {
         return Result.ok();
     }
 
-    @PostMapping(LocationReportAction.AI_ANALYSE)
-    public Result<List<Item>> aiAnalyse(@RequestBody List<BatchUploadFileUrlRequest> request) throws BusinessException {
-        return Result.ok(fileBusinessService.aiAnalyse(request));
+    @GetMapping(LocationReportAction.AI_ANALYSE)
+    public Result<List<Item>> aiAnalyse(@RequestParam Long locationId) throws BusinessException {
+        return Result.ok(fileBusinessService.aiAnalyse(locationId));
     }
 }

@@ -21,6 +21,8 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author QYP
@@ -51,11 +53,20 @@ public class FileBusinessService {
         fileService.removeById(fileId);
     }
 
-    public List<Item> aiAnalyse(List<BatchUploadFileUrlRequest> requestList) throws BusinessException {
+    public List<Item> aiAnalyse(Long locationId) throws BusinessException {
+        // 已经生成过的file不用再次生成
+        List<File> fileList = fileService.list(new LambdaQueryWrapper<File>().eq(File::getLocationId, locationId));
+        List<Item> items = itemService.list(new LambdaQueryWrapper<Item>().in(Item::getFileId, fileList.stream().map(File::getId).collect(Collectors.toList())));
+        Map<Long, List<Item>> itemMap = items.stream().collect(Collectors.groupingBy(Item::getFileId));
+        List<File> noAnalyseFile = fileList.stream().filter(t -> !itemMap.containsKey(t.getId())).collect(Collectors.toList());
+
+        // 都生成过就直接返回
+        if (CollectionUtils.isEmpty(noAnalyseFile)) {
+            return items;
+        }
+
         List<Item> itemList = new ArrayList<>();
-        List<Long> fileIdList = new ArrayList<>();
-        for (BatchUploadFileUrlRequest request : requestList) {
-            fileIdList.add(request.getFileId());
+        for (File request : noAnalyseFile) {
             JSONObject data = new JSONObject();
             data.put(JsonKey.FILE_URL, request.getUrl());
             String responseBody = null;
@@ -73,7 +84,7 @@ public class FileBusinessService {
                         for (int i = 0; i < itemJsonList.size(); i++) {
                             JSONObject itemJson = itemJsonList.getJSONObject(i);
                             Item item = new Item();
-                            item.setFileId(request.getFileId());
+                            item.setFileId(request.getId());
                             item.setItemName(itemJson.getString("ItemName"));
                             item.setComments(itemJson.getString("Suggested"));
                             item.setQuantity(itemJson.getString("Quantity"));
@@ -95,13 +106,10 @@ public class FileBusinessService {
                 }
             }
         }
-        if (!CollectionUtils.isEmpty(fileIdList)) {
-            itemService.remove(new LambdaQueryWrapper<Item>().in(Item::getFileId, fileIdList));
-        }
-
         if (!CollectionUtils.isEmpty(itemList)) {
             itemService.saveBatch(itemList);
+            items.addAll(itemList);
         }
-        return itemList;
+        return items;
     }
 }
