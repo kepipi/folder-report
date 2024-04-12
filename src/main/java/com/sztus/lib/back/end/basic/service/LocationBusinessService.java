@@ -51,21 +51,22 @@ public class LocationBusinessService {
         //根据location获取file
         List<File> fileList = fileService.list(Wrappers.<File>lambdaQuery()
                 .in(File::getLocationId, locationList.stream().map(Location::getId).collect(Collectors.toList())));
+        Map<Long, List<File>> fileLocationMap = fileList.stream().collect(Collectors.groupingBy(File::getLocationId));
         if (CollectionUtils.isEmpty(fileList)) {
             for (Location location : locationItemResponse.getLocationList()) {
                 location.setName(location.getName() + "(0)");
             }
             return locationItemResponse;
-        }
-        //根据file获取item
-        List<Item> itemList = itemService.list(Wrappers.<Item>lambdaQuery()
-                .in(Item::getFileId, fileList.stream().map(File::getId).collect(Collectors.toList())));
-        Map<Long, List<File>> fileLocationMap = fileList.stream().collect(Collectors.groupingBy(File::getLocationId));
-        if (CollectionUtils.isEmpty(itemList)) {
+        } else {
             for (Location location : locationItemResponse.getLocationList()) {
                 List<File> files = fileLocationMap.getOrDefault(location.getId(), new ArrayList<File>());
                 location.setName(location.getName() + "(" + files.size() + ")");
             }
+        }
+        //根据file获取item
+        List<Item> itemList = itemService.list(Wrappers.<Item>lambdaQuery()
+                .in(Item::getFileId, fileList.stream().map(File::getId).collect(Collectors.toList())));
+        if (CollectionUtils.isEmpty(itemList)) {
             return locationItemResponse;
         }
         //用于组装数据返回前端
