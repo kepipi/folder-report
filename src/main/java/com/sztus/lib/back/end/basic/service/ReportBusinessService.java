@@ -23,6 +23,7 @@ import com.sztus.lib.back.end.basic.type.enumerate.ConditionEnum;
 import com.sztus.lib.back.end.basic.type.enumerate.ErrorCode;
 import com.sztus.lib.back.end.basic.type.enumerate.StorageError;
 import com.sztus.lib.back.end.basic.utils.DateUtil;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +46,12 @@ public class ReportBusinessService {
     private ReportService reportService;
     @Resource
     private LocationService locationService;
+
+    @Resource
+    private FileService fileService;
+
+    @Resource
+    private ItemService itemService;
 
     @Resource
     private StorageService storageService;
@@ -78,6 +85,24 @@ public class ReportBusinessService {
 
         locationService.saveBatch(saveLocationList);
 
+    }
+
+    public void deleteReport(Long reportId) {
+        reportService.removeById(reportId);
+        List<Location> locationList = locationService.list(new LambdaQueryWrapper<Location>().eq(Location::getReportId, reportId));
+        if (!CollectionUtils.isEmpty(locationList)) {
+            locationService.removeBatchByIds(locationList.stream().map(Location::getId).collect(Collectors.toList()));
+            List<File> fileList = fileService.list(new LambdaQueryWrapper<File>().in(File::getLocationId, locationList.stream().map(Location::getId).collect(Collectors.toList())));
+
+            if (!CollectionUtils.isEmpty(fileList)) {
+                fileService.removeBatchByIds(fileList.stream().map(File::getId).collect(Collectors.toList()));
+                List<Item> itemList = itemService.list(new LambdaQueryWrapper<Item>().in(Item::getFileId, fileList.stream().map(File::getId).collect(Collectors.toList())));
+                
+                if (!CollectionUtils.isEmpty(itemList)) {
+                    itemService.removeBatchByIds(itemList.stream().map(Item::getId).collect(Collectors.toList()));
+                }
+            }
+        }
     }
 
     public List<PreviewReportResponse> previewReport(Long reportId) {
