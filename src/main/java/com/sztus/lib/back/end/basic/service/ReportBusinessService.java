@@ -70,9 +70,12 @@ public class ReportBusinessService {
         List<Report> list = reportService.list();
         Report report;
         if (CollectionUtils.isEmpty(list)) {
-            report = new Report(null, housePropertyId, "Report1", null, currentTimestamp);
+            report = new Report(null, housePropertyId, "Report-1", null, currentTimestamp);
         } else {
-            report = new Report(null, housePropertyId, "Report(" + (list.size() + 1) + ")", null, currentTimestamp);
+            List<String> nameList = list.stream().map(Report::getReportName).sorted().collect(Collectors.toList());
+            String lastName = nameList.get(nameList.size() - 1);
+            String[] nameSplit = lastName.split("-");
+            report = new Report(null, housePropertyId, "Report" + "-" + (Integer.parseInt(nameSplit[1]) + 1), null, currentTimestamp);
         }
         reportService.save(report);
 

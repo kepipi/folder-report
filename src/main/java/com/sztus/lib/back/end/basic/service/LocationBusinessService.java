@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -51,6 +52,9 @@ public class LocationBusinessService {
         List<File> fileList = fileService.list(Wrappers.<File>lambdaQuery()
                 .in(File::getLocationId, locationList.stream().map(Location::getId).collect(Collectors.toList())));
         if (CollectionUtils.isEmpty(fileList)) {
+            for (Location location : locationItemResponse.getLocationList()) {
+                location.setName(location.getName() + "(0)");
+            }
             return locationItemResponse;
         }
         //根据file获取item
@@ -63,6 +67,11 @@ public class LocationBusinessService {
         Map<Long, Location> locationMap = locationList.stream().collect(Collectors.toMap(Location::getId, location -> location));
         Map<Long, List<File>> fileLocationMap = fileList.stream().collect(Collectors.groupingBy(File::getLocationId));
         Map<Long, List<Item>> itemMap = itemList.stream().collect(Collectors.groupingBy(Item::getFileId));
+
+        for (Location location : locationItemResponse.getLocationList()) {
+            List<File> files = fileLocationMap.getOrDefault(location.getId(), new ArrayList<File>());
+            location.setName(location.getName() + "(" + files.size() + ")");
+        }
 
         List<ItemResponse> itemResponses = new ArrayList<>();
         //将所有的file根据location分组，location下的所有file对应的所有item进行返回
@@ -85,11 +94,25 @@ public class LocationBusinessService {
     }
 
     public void saveLocation(Location location) {
-        List<Location> locationList = locationService.list(Wrappers.<Location>lambdaQuery().eq(Location::getReportId, location.getReportId())
-                .and(w -> w.eq(Location::getName, location.getName()).or().likeLeft(Location::getName, location.getName() + "(")));
+        List<Location> locationList = locationService.list(Wrappers.<Location>lambdaQuery()
+                .last("where report_id = " + location.getReportId()
+                        + " and (`name` = '" + location.getName() + "' OR `name` REGEXP '" + location.getName() + "-[0-9]+')"));
         if (CollectionUtils.isNotEmpty(locationList)) {
             String name = location.getName();
-            location.setName(name + "(" + (locationList.size() + 1) + ")");
+            List<String> nameList = locationList.stream().map(Location::getName).sorted().collect(Collectors.toList());
+            if (locationList.size() == 1) {
+                if (nameList.get(0).equals(name)) {
+                    location.setName(name + "-1");
+                } else {
+                    String lastName = nameList.get(0);
+                    String[] nameSplit = lastName.split("-");
+                    location.setName(name + "-" + (Integer.parseInt(nameSplit[1]) + 1));
+                }
+            } else {
+                String lastName = nameList.get(nameList.size() - 1);
+                String[] nameSplit = lastName.split("-");
+                location.setName(name + "-" + (Integer.parseInt(nameSplit[1]) + 1));
+            }
         }
         locationService.saveOrUpdate(location);
     }
