@@ -4,7 +4,6 @@ import com.sztus.lib.back.end.basic.exception.BusinessException;
 import com.sztus.lib.back.end.basic.object.domain.File;
 import com.sztus.lib.back.end.basic.object.domain.Item;
 import com.sztus.lib.back.end.basic.object.domain.Location;
-import com.sztus.lib.back.end.basic.object.request.BatchUploadFileUrlRequest;
 import com.sztus.lib.back.end.basic.object.request.StorageFileUploadRequest;
 import com.sztus.lib.back.end.basic.object.response.LocationItemResponse;
 import com.sztus.lib.back.end.basic.service.FileBusinessService;

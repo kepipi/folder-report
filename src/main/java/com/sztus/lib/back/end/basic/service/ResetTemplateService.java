@@ -1,6 +1,5 @@
 package com.sztus.lib.back.end.basic.service;
 
-import com.sztus.lib.back.end.basic.component.BaseRestTemplate;
 import com.sztus.lib.back.end.basic.component.SimpleRestTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -18,13 +18,8 @@ import com.sztus.lib.back.end.basic.object.request.StorageFileUploadRequest;
 import com.sztus.lib.back.end.basic.object.response.ChecklistItem;
 import com.sztus.lib.back.end.basic.object.response.PreviewReportResponse;
 import com.sztus.lib.back.end.basic.object.response.StorageFileUploadResponse;
-import com.sztus.lib.back.end.basic.type.enumerate.CleanlinessEnum;
-import com.sztus.lib.back.end.basic.type.enumerate.ConditionEnum;
 import com.sztus.lib.back.end.basic.type.enumerate.ErrorCode;
-import com.sztus.lib.back.end.basic.type.enumerate.StorageError;
 import com.sztus.lib.back.end.basic.utils.DateUtil;
-import org.checkerframework.checker.units.qual.C;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -9,7 +9,6 @@ import com.sztus.lib.back.end.basic.dao.service.ItemService;
 import com.sztus.lib.back.end.basic.exception.BusinessException;
 import com.sztus.lib.back.end.basic.object.domain.File;
 import com.sztus.lib.back.end.basic.object.domain.Item;
-import com.sztus.lib.back.end.basic.object.request.BatchUploadFileUrlRequest;
 import com.sztus.lib.back.end.basic.type.constant.JsonKey;
 import com.sztus.lib.back.end.basic.type.enumerate.CleanlinessEnum;
 import com.sztus.lib.back.end.basic.type.enumerate.ConditionEnum;
