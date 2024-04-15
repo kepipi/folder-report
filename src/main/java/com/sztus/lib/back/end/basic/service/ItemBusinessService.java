@@ -8,8 +8,6 @@ import com.sztus.lib.back.end.basic.object.dto.FileItemDTO;
 import com.sztus.lib.back.end.basic.object.response.FileItemResponse;
 import com.sztus.lib.back.end.basic.object.view.FileView;
 import com.sztus.lib.back.end.basic.object.view.ItemView;
-import com.sztus.lib.back.end.basic.type.enumerate.CleanlinessEnum;
-import com.sztus.lib.back.end.basic.type.enumerate.ConditionEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
