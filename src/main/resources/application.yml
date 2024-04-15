@@ -5,8 +5,8 @@ server:
 spring:
   datasource:
     url: jdbc:mysql://34.92.159.177:3306/estate_report?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true&autoReconnect=true
-    username: admin
-    password: vrgZAKNZR"2Qx8"6
+    username: kepipi-dev
+    password: g|y#+cb4ZqXyT440
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
   redis:
@@ -27,6 +27,6 @@ spring:
   mvc:
     async:
       request-timeout: 3600000
-#mybatis-plus:
-#  configuration:
-#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #开启sql日志
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #开启sql日志

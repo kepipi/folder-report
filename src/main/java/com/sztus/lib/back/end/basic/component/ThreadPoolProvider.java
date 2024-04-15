@@ -16,8 +16,8 @@ public class ThreadPoolProvider {
     @Bean(name = "aiAnalyseThreadPool")
     public ThreadPoolExecutor aiAnalyseThreadPool() {
         return new ThreadPoolExecutor(
-                10,
-                20,
+                1,
+                1,
                 60,
                 TimeUnit.SECONDS,
                 new LinkedBlockingQueue<>(),

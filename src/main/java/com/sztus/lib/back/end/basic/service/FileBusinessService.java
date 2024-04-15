@@ -122,7 +122,15 @@ public class FileBusinessService {
                     }
                 }
                 System.out.println("发送成功 ：" + noAnalyseFile.get(finalI).getUrl());
-
+                if (finalI == noAnalyseFile.size() - 1) {
+                    try {
+                        emitter.send("");
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    emitter.complete(); // 在最后一次迭代时断开链接
+                    System.out.println("关闭sse");
+                }
             });
         }
         return emitter;
