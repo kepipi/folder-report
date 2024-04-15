@@ -16,9 +16,12 @@ import com.sztus.lib.back.end.basic.utils.ConvertUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -96,7 +99,10 @@ public class LocationController {
     }
 
     @GetMapping(LocationReportAction.AI_ANALYSE)
-    public Result<List<Item>> aiAnalyse(@RequestParam Long locationId) throws BusinessException {
-        return Result.ok(fileBusinessService.aiAnalyse(locationId));
+    public SseEmitter aiAnalyse(@RequestParam Long locationId, HttpServletResponse response) throws IOException {
+        response.setHeader("Cache-Control", "no-cache");
+        response.setHeader("Content-Type", "text/event-stream");
+        response.setHeader("Connection", "keep-alive");
+        return fileBusinessService.aiAnalyse(locationId);
     }
 }
