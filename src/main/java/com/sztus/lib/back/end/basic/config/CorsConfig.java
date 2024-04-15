@@ -1,6 +1,10 @@
 package com.sztus.lib.back.end.basic.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -9,22 +13,34 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @author AustinWang
  */
 @Configuration
-public class CorsConfig implements WebMvcConfigurer {
- 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-      // 设置允许跨域的路径
-        registry.addMapping("/**")
-                // 设置允许跨域请求的域名
-                .allowedOriginPatterns("*")
-                // 是否允许cookie
-                .allowCredentials(true)
-                // 设置允许的请求方式
-                .allowedMethods("GET", "POST", "DELETE", "PUT")
-                // 设置允许的header属性
-                .allowedHeaders("*")
-                // 跨域允许时间
-                .maxAge(3600);
+public class CorsConfig {
+
+    @Bean
+    public CorsFilter addCorsMappings() {
+        //1.添加CORS配置信息
+        CorsConfiguration config = new CorsConfiguration();
+        //1) 允许的域,不要写/，否则cookie就无法使用了
+        config.addAllowedOrigin("*");
+
+        //2) 是否允许发送Cookie信息
+        config.setAllowCredentials(true);
+        //3) 允许的请求方式
+        config.addAllowedMethod("OPTIONS");
+        config.addAllowedMethod("HEAD");
+        config.addAllowedMethod("GET");
+        config.addAllowedMethod("PUT");
+        config.addAllowedMethod("POST");
+        config.addAllowedMethod("DELETE");
+        config.addAllowedMethod("PATCH");
+        // 4）允许的头信息
+        config.addAllowedHeader("*");
+
+        //2.添加映射路径，我们拦截一切请求
+        UrlBasedCorsConfigurationSource configSource = new
+                UrlBasedCorsConfigurationSource();
+        configSource.registerCorsConfiguration("/**", config);
+        //3.返回新的CorsFilter.
+        return new CorsFilter(configSource);
     }
 
 }
