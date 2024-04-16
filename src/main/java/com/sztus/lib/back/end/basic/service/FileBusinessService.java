@@ -105,7 +105,7 @@ public class FileBusinessService {
                                 item.setCleanliness(CleanlinessEnum.getTextByValue(itemJson.getString("Cleanliness")));
                                 itemList.add(item);
                             }
-//                                itemService.saveBatch(itemList);
+                            itemService.saveBatch(itemList);
                             System.out.println("发送数据" + itemList);
                             emitter.send(itemList);
                         }
