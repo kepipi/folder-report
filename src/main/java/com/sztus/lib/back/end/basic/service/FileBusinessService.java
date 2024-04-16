@@ -58,81 +58,66 @@ public class FileBusinessService {
         fileService.removeById(fileId);
     }
 
-    public SseEmitter aiAnalyse(Long locationId) throws IOException {
+    public SseEmitter aiAnalyse(Long locationId) {
         SseEmitter emitter = new SseEmitter();
-        // 已经生成过的file不用再次生成
-        List<File> fileList = fileService.list(new LambdaQueryWrapper<File>().eq(File::getLocationId, locationId));
-        List<Item> items = itemService.list(new LambdaQueryWrapper<Item>().in(Item::getFileId, fileList.stream().map(File::getId).collect(Collectors.toList())));
-        Map<Long, List<Item>> itemMap = items.stream().collect(Collectors.groupingBy(Item::getFileId));
-        List<File> noAnalyseFile = fileList.stream().filter(t -> !itemMap.containsKey(t.getId())).collect(Collectors.toList());
-
-        if (!CollectionUtils.isEmpty(items)) {
-            emitter.send(items);
-        }
-
-        // 都生成过就直接返回
-        if (CollectionUtils.isEmpty(noAnalyseFile)) {
-            emitter.complete();
-            return emitter;
-        }
-        for (int i = 0; i < noAnalyseFile.size(); i++) {
-            int finalI = i;
-            threadPoolExecutor.execute(() -> {
-                JSONObject data = new JSONObject();
-                data.put(JsonKey.FILE_URL, noAnalyseFile.get(finalI).getUrl());
-                String responseBody = null;
-                boolean parsingSuccessful = false;
-                int retryCount = 0;
-                // 设置最大重试次数
-                int maxRetries = 5;
-                while (!parsingSuccessful && retryCount < maxRetries) {
-                    try {
-                        responseBody = resetTemplateService.doPostByRequestBody(AI_URL, data.toJSONString());
-                        JSONObject responseJson = JSONObject.parseObject(responseBody);
-                        String description = responseJson.getString("Description");
-                        JSONArray itemJsonList = JSON.parseArray(description);
-                        if (!itemJsonList.isEmpty()) {
-                            List<Item> itemList = new ArrayList<>();
-                            for (int j = 0; j < itemJsonList.size(); j++) {
-                                JSONObject itemJson = itemJsonList.getJSONObject(j);
-                                Item item = new Item();
-                                item.setFileId(noAnalyseFile.get(finalI).getId());
-                                item.setItemName(itemJson.getString("ItemName"));
-                                item.setComments(itemJson.getString("Suggested"));
-                                item.setQuantity(itemJson.getString("Quantity"));
-                                item.setDescription(itemJson.getString("Description"));
-                                item.setCondition(ConditionEnum.getTextByValue(itemJson.getString("Condition")));
-                                item.setCleanliness(CleanlinessEnum.getTextByValue(itemJson.getString("Cleanliness")));
-                                itemList.add(item);
-                            }
-                            itemService.saveBatch(itemList);
-                            emitter.send(itemList);
-                        }
-                        // 表示 JSON 解析成功
-                        parsingSuccessful = true;
-                    } catch (Exception e) {
-                        // JSON 解析失败，进行重试
-                        retryCount++;
-                        log.error("JSON 解析失败，进行重试 times：{}, JSON: {}", retryCount, noAnalyseFile.get(finalI).getUrl() + responseBody, e);
-                        if (retryCount == maxRetries) {
-                            emitter.completeWithError(e);
-                            return;
-                        }
-                    }
+        threadPoolExecutor.execute(() -> {
+            try {
+                List<File> fileList = fileService.list(new LambdaQueryWrapper<File>().eq(File::getLocationId, locationId));
+                if (CollectionUtils.isEmpty(fileList)) {
+                    emitter.complete();
+                    return;
                 }
-                log.info("发送成功 ：{}", noAnalyseFile.get(finalI).getUrl());
-                if (finalI == noAnalyseFile.size() - 1) {
-                    try {
-                        emitter.send("");
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                    emitter.complete(); // 在最后一次迭代时断开链接
-                    System.out.println("关闭sse");
-                }
-            });
-        }
+                Map<Long, List<Item>> itemMap = itemService.list(new LambdaQueryWrapper<Item>()
+                                .in(Item::getFileId, fileList.stream().map(File::getId).collect(Collectors.toList())))
+                        .stream().collect(Collectors.groupingBy(Item::getFileId));
+                fileList.stream().filter(file -> !itemMap.containsKey(file.getId()))
+                        .forEach(file -> processFile(file, emitter));
+            } catch (Exception e) {
+                emitter.completeWithError(e);
+                log.error("Error occurred during AI analysis: {}", e.getMessage());
+            }
+        });
         return emitter;
+    }
+
+    private void processFile(File file, SseEmitter emitter) {
+        JSONObject data = new JSONObject();
+        data.put(JsonKey.FILE_URL, file.getUrl());
+        String responseBody;
+        boolean parsingSuccessful = false;
+        int retryCount = 0;
+        int maxRetries = 5; // 设置最大重试次数
+        while (!parsingSuccessful && retryCount < maxRetries) {
+            try {
+                responseBody = resetTemplateService.doPostByRequestBody(AI_URL, data.toJSONString());
+                JSONArray itemJsonList = JSONObject.parseObject(responseBody).getJSONArray("Description");
+                List<Item> itemList = itemJsonList.stream()
+                        .map(itemJson -> extractItem(file.getId(), (JSONObject) itemJson))
+                        .collect(Collectors.toList());
+                itemService.saveBatch(itemList);
+                emitter.send(itemList);
+                log.info("Processing completed for file: {}", file.getUrl());
+                parsingSuccessful = true; // 表示解析成功，跳出重试循环
+            } catch (Exception e) {
+                log.error("Error occurred during processing file: {}, retrying... Attempt: {}", file.getUrl(), retryCount + 1, e);
+                retryCount++; // 增加重试次数
+                if (retryCount == maxRetries) {
+                    emitter.completeWithError(e); // 达到最大重试次数后完成 SseEmitter 并报错
+                }
+            }
+        }
+    }
+
+    private Item extractItem(Long fileId, JSONObject itemJson) {
+        Item item = new Item();
+        item.setFileId(fileId);
+        item.setItemName(itemJson.getString("ItemName"));
+        item.setComments(itemJson.getString("Suggested"));
+        item.setQuantity(itemJson.getString("Quantity"));
+        item.setDescription(itemJson.getString("Description"));
+        item.setCondition(ConditionEnum.getTextByValue(itemJson.getString("Condition")));
+        item.setCleanliness(CleanlinessEnum.getTextByValue(itemJson.getString("Cleanliness")));
+        return item;
     }
 
 }

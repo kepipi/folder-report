@@ -24,8 +24,8 @@ public enum ErrorCode implements BaseError {
         this.message = message;
     }
 
-    private Integer code;
-    private String message;
+    private final Integer code;
+    private final String message;
 
     @Override
     public Integer getCode() {

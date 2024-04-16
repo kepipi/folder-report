@@ -42,8 +42,8 @@ public enum ConnectionTypeEnum implements BaseEnum {
         this.value = value;
     }
 
-    private String text;
-    private Integer value;
+    private final String text;
+    private final Integer value;
 
     @Override
     public String getText() {

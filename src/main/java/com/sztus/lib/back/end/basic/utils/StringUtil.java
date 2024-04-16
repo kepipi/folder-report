@@ -152,7 +152,7 @@ public class StringUtil {
             num = num.substring(0, num.length() - (4 * i + 3)) + GlobalConst.STR_COMMA + num.substring(num.length() - (4 * i + 3));
         }
 
-        if (num.length() > 0 && num.startsWith(GlobalConst.STR_COMMA)) {
+        if (num.startsWith(GlobalConst.STR_COMMA)) {
             num = num.substring(1);
         }
 
