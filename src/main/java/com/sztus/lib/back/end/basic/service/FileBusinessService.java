@@ -106,7 +106,6 @@ public class FileBusinessService {
                                 itemList.add(item);
                             }
                             itemService.saveBatch(itemList);
-                            System.out.println("发送数据" + itemList);
                             emitter.send(itemList);
                         }
                         // 表示 JSON 解析成功
@@ -121,7 +120,7 @@ public class FileBusinessService {
                         }
                     }
                 }
-                System.out.println("发送成功 ：" + noAnalyseFile.get(finalI).getUrl());
+                log.info("发送成功 ：{}", noAnalyseFile.get(finalI).getUrl());
                 if (finalI == noAnalyseFile.size() - 1) {
                     try {
                         emitter.send("");
