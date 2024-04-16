@@ -128,7 +128,7 @@ public class FileBusinessService {
                         throw new RuntimeException(e);
                     }
                     emitter.complete(); // 在最后一次迭代时断开链接
-                    System.out.println("关闭sse");
+                    log.info("关闭sse");
                 }
             });
         }
