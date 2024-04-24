@@ -1,16 +1,16 @@
-spring:
-  main:
-    allow-bean-definition-overriding: true
-  profiles:
-    active: dev
-  application:
-    name: folder-report
-  cloud:
-    nacos:
-      discovery:
-        server-addr: 35.246.38.144:8848 #注册中心
-      config:
-        server-addr: 35.246.38.144:8848 #配置中心
-        file-extension: yaml #配置文件格式
-        group: DEFAULT_GROUP
-        namespace: 43c11513-456c-4f03-b075-c9238acb1c52
+#spring:
+#  main:
+#    allow-bean-definition-overriding: true
+#  profiles:
+#    active: dev
+#  application:
+#    name: folder-report
+#  cloud:
+#    nacos:
+#      discovery:
+#        server-addr: 35.246.38.144:8848 #注册中心
+#      config:
+#        server-addr: 35.246.38.144:8848 #配置中心
+#        file-extension: yaml #配置文件格式
+#        group: DEFAULT_GROUP
+#        namespace: 43c11513-456c-4f03-b075-c9238acb1c52
