@@ -13,6 +13,6 @@ public class HelloController {
 
     @GetMapping("/hello2")
     public Result<String> hello2() {
-        return Result.ok("hello2");
+        return Result.ok("hello2hello");
     }
 }
